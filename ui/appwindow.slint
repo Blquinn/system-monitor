@@ -1,0 +1,125 @@
+import { Button, VerticalBox , HorizontalBox, GridBox, ListView} from "std-widgets.slint";
+
+component SimpleButton inherits TouchArea {
+    min-height: 24px;
+
+    in property <string> text <=> i-text.text;
+    in property <bool> selected;
+
+    i-container := Rectangle {
+        HorizontalLayout {  
+            padding: 4px;
+
+            i-text := Text {
+                horizontal-alignment: left;
+                vertical-alignment: center;
+                font-size: 14px;
+            }
+        }
+
+        animate background { duration: 150ms;  }
+    }
+
+    states [
+        pressed when root.pressed: {
+            i-container.background: rgba(174, 174, 174, 1);
+            i-text.color: #111111;
+        }
+        selected when root.selected: {
+            i-container.background: rgba(174, 174, 174, 0.75);
+            i-text.color: #111111;
+        }
+        hovered when root.has-hover: {
+            i-container.background: rgba(174, 174, 174, 0.5);
+            i-text.color: #111111;
+        }
+    ]
+}
+
+export component AppWindow inherits Window {
+    in-out property<int> counter: 42;
+    callback request-increase-value();
+
+    property <string> selectedTool: "CPU";
+
+    preferred-height: 600px;
+    preferred-width: 1000px;
+
+    padding: 0;
+
+    VerticalBox {
+        spacing: 0;
+        padding: 0;
+
+        HorizontalBox { 
+            spacing: 0;
+            padding: 0;
+
+            Rectangle {
+                border-width: 0;
+                width: 200px;
+
+                
+                VerticalLayout {
+                    Text {
+                        height: 30px;
+                        text: "System Monitor";
+                        font-weight: 900;
+                        horizontal-alignment: center;
+                        vertical-alignment: center;
+                    }
+
+                    for data in [
+                        {label: "CPU"},
+                        {label: "Memory"},
+                        {label: "Storage"},
+                        {label: "Processes"},
+                    ]: SimpleButton {
+                        height: 40px;
+                        text: data.label;
+                        selected: root.selectedTool == data.label;
+                        clicked => {
+                            root.selectedTool = data.label;
+                        }
+                    }
+
+                    Rectangle {
+                        vertical-stretch: 1;
+                    }
+                }
+            }
+
+            Rectangle {
+                width: 1px;
+                background: rgba(255,255,255,0.25);
+            }
+
+            // Right Panel
+            VerticalLayout {
+                spacing: 0;
+                horizontal-stretch: 1;
+                padding: 8px;
+
+                Text {
+                    text: root.selectedTool;
+                    font-weight: 900;
+                    font-size: 24px;
+                }
+
+                Rectangle {
+                    vertical-stretch: 1;
+                }
+            }
+        }
+
+        Rectangle {
+            height: 1px;
+            background: rgba(255,255,255,0.25);
+        }
+
+        Rectangle {
+            border-width: 0;
+            height: 20px;
+        }
+    }
+}
