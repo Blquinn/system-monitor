@@ -37,8 +37,7 @@ component SimpleButton inherits TouchArea {
 }
 
 export component AppWindow inherits Window {
-    in-out property<int> counter: 42;
-    callback request-increase-value();
+    in property <float> cpu-usage;
 
     property <string> selectedTool: "CPU";
 
@@ -99,11 +98,15 @@ export component AppWindow inherits Window {
                 spacing: 0;
                 horizontal-stretch: 1;
                 padding: 8px;
-
+                
                 Text {
                     text: root.selectedTool;
                     font-weight: 900;
                     font-size: 24px;
+                }
+
+                if root.selectedTool == "CPU" : Text {
+                    text: "CPU Usage: \{root.cpu-usage}";
                 }
 
                 Rectangle {
