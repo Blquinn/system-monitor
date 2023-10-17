@@ -5,7 +5,7 @@ export component CpuMonitor {
 
     VerticalBox {
         Text {
-            text: "Average CPU Usage: \{root.cpu-usage}%";
+            text: "Average CPU Usage: " + (Math.round(root.cpu-usage * 100.0) / 100.0) + "%";
         }
 
         ProgressIndicator { 
