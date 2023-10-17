@@ -1,49 +1,16 @@
-import { Button, VerticalBox , HorizontalBox, GridBox, ListView} from "std-widgets.slint";
+import { Button, VerticalBox , HorizontalBox, GridBox, ListView, Slider, ProgressIndicator} from "std-widgets.slint";
 
-component SimpleButton inherits TouchArea {
-    min-height: 24px;
-
-    in property <string> text <=> i-text.text;
-    in property <bool> selected;
-
-    i-container := Rectangle {
-        HorizontalLayout {  
-            padding: 4px;
-
-            i-text := Text {
-                horizontal-alignment: left;
-                vertical-alignment: center;
-                font-size: 14px;
-            }
-        }
-
-        animate background { duration: 150ms;  }
-    }
-
-    states [
-        pressed when root.pressed: {
-            i-container.background: rgba(174, 174, 174, 1);
-            i-text.color: #111111;
-        }
-        selected when root.selected: {
-            i-container.background: rgba(174, 174, 174, 0.75);
-            i-text.color: #111111;
-        }
-        hovered when root.has-hover: {
-            i-container.background: rgba(174, 174, 174, 0.5);
-            i-text.color: #111111;
-        }
-    ]
-}
+import { SidebarButton } from "sidebar-button.slint";
+import { CpuMonitor } from "tools/cpu-monitor.slint";
 
 export component AppWindow inherits Window {
     in property <float> cpu-usage;
 
     property <string> selectedTool: "CPU";
 
+    title: "System Monitor";
     preferred-height: 600px;
     preferred-width: 1000px;
-
     padding: 0;
 
     VerticalBox {
@@ -73,7 +40,7 @@ export component AppWindow inherits Window {
                         {label: "Memory"},
                         {label: "Storage"},
                         {label: "Processes"},
-                    ]: SimpleButton {
+                    ]: SidebarButton {
                         height: 40px;
                         text: data.label;
                         selected: root.selectedTool == data.label;
@@ -105,9 +72,7 @@ export component AppWindow inherits Window {
                     font-size: 24px;
                 }
 
-                if root.selectedTool == "CPU" : Text {
-                    text: "CPU Usage: \{root.cpu-usage}";
-                }
+                if root.selectedTool == "CPU" : CpuMonitor { cpu-usage: root.cpu-usage; }
 
                 Rectangle {
                     vertical-stretch: 1;

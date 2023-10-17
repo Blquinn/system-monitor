@@ -1,0 +1,15 @@
+import { VerticalBox, ProgressIndicator } from "std-widgets.slint";
+
+export component CpuMonitor {
+    in property <float> cpu-usage;
+
+    VerticalBox {
+        Text {
+            text: "Average CPU Usage: \{root.cpu-usage}%";
+        }
+
+        ProgressIndicator { 
+            progress: root.cpu-usage / 100.0;
+        }
+    }
+}

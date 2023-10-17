@@ -1,0 +1,57 @@
+export component SidebarButton inherits TouchArea {
+    min-height: 24px;
+
+    in property <string> text <=> i-text.text;
+    in property <bool> selected;
+    out property <bool> has-focus: i-focus-scope.has-focus;
+
+    accessible-role: button;
+    accessible-label: text;
+
+    i-focus-scope := FocusScope {
+        x: 0;
+        width: 0; // Do not react on clicks
+        enabled <=> root.enabled;
+
+        key-pressed(event) => {
+            if (event.text == " " || event.text == "\n") {
+                root.clicked(); 
+                return accept;
+            }
+
+            return reject;
+        }
+    }
+
+    i-container := Rectangle {
+        border-color: (root.has-focus && root.enabled) ? white.with-alpha(0.25) : transparent;
+        border-width: 1px;
+
+        HorizontalLayout {  
+            padding: 4px;
+
+            i-text := Text {
+                horizontal-alignment: left;
+                vertical-alignment: center;
+                font-size: 14px;
+            }
+        }
+
+        animate background { duration: 150ms;  }
+    }
+
+    states [
+        pressed when root.pressed: {
+            i-container.background: rgba(174, 174, 174, 1);
+            i-text.color: #111111;
+        }
+        selected when root.selected: {
+            i-container.background: rgba(174, 174, 174, 0.75);
+            i-text.color: #111111;
+        }
+        hovered when root.has-hover: {
+            i-container.background: rgba(174, 174, 174, 0.5);
+            i-text.color: #111111;
+        }
+    ]
+}
