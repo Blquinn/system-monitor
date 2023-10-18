@@ -1,7 +1,9 @@
 import { Button, VerticalBox , HorizontalBox, GridBox, ListView, Slider, ProgressIndicator} from "std-widgets.slint";
 
 import { SidebarButton } from "sidebar-button.slint";
-import { CpuMonitor } from "tools/cpu-monitor.slint";
+import { CpuMonitor, CpuMonitorPageAdapter, CpuData } from "tools/cpu-monitor.slint";
+
+export { CpuMonitorPageAdapter, CpuData }
 
 export component AppWindow inherits Window {
     in property <float> cpu-usage;
@@ -17,7 +19,7 @@ export component AppWindow inherits Window {
         spacing: 0;
         padding: 0;
 
-        HorizontalBox { 
+        HorizontalBox {
             spacing: 0;
             padding: 0;
 
@@ -48,6 +50,10 @@ export component AppWindow inherits Window {
                             root.selectedTool = data.label;
                         }
                     }
+
+                    // for v in CpuMonitorPageAdapter.cpu-data: Text {
+                    //     text: "" + v.length;
+                    // }
 
                     Rectangle {
                         vertical-stretch: 1;

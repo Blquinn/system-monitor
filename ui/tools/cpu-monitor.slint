@@ -1,15 +1,67 @@
-import { VerticalBox, ProgressIndicator } from "std-widgets.slint";
+import { VerticalBox, ProgressIndicator , ScrollView} from "std-widgets.slint";
+
+export struct CpuData {
+    samples: [float],
+    path: string,
+}
+
+export global CpuMonitorPageAdapter {
+    in property <[CpuData]> cpu_data: [];
+}
 
 export component CpuMonitor {
     in property <float> cpu-usage;
 
     VerticalBox {
         Text {
+            vertical-stretch: 0;
             text: "Average CPU Usage: " + (Math.round(root.cpu-usage * 100.0) / 100.0) + "%";
         }
 
         ProgressIndicator { 
+            vertical-stretch: 0;
             progress: root.cpu-usage / 100.0;
+        }
+
+        Rectangle {
+            height: 16px;
+        }
+
+        ScrollView {
+            HorizontalLayout {
+                spacing: 8px;
+
+                for cpu_idx in CpuMonitorPageAdapter.cpu-data.length: VerticalLayout {
+                    spacing: 0;
+
+                    Text {
+                        text: "CPU \{cpu_idx + 1}";
+                    }
+
+                    Rectangle {
+                        padding: 0;
+                        height: 100px;
+                        width: 120px + self.border-width;
+                        border-color: white.with-alpha(0.5);
+                        border-width: 1px;
+
+                        Path {
+                            height: parent.height; 
+                            width: parent.width - parent.border-width;
+                            x: (120px - CpuMonitorPageAdapter.cpu-data[cpu_idx].samples.length * 1px);
+                            stroke: red;
+                            stroke-width: 1px;
+                            viewbox-height: 100;
+                            viewbox-width: 120 - parent.border-width / 1px;
+                            commands: CpuMonitorPageAdapter.cpu-data[cpu_idx].path;
+                        }
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            vertical-stretch: 1;
         }
     }
 }
